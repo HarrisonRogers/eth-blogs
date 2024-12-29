@@ -12,6 +12,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "fs-extra": "^11.2.0",
     "lucide-react": "^0.469.0",
     "next": "14.2.22",
     "react": "^18",
@@ -19,6 +20,8 @@
     "solc": "^0.8.28",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.21.57",
+    "web3": "^4.16.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -30,5 +33,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "type": "module"
 }
