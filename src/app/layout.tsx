@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${sixtyfour.variable} ${oswald.variable} font-roboto antialiased flex flex-col items-center justify-center h-screen`}
+        className={`${roboto.variable} ${sixtyfour.variable} ${oswald.variable} antialiased flex flex-col items-center justify-center text-center h-screen`}
       >
         {children}
       </body>
