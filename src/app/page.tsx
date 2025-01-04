@@ -1,16 +1,17 @@
 'use client';
 
 import { useAccount } from 'wagmi';
+import { BlogPosts } from '@/components/BlogPosts';
+import Container from '@/components/ui/container';
 
 export default function Home() {
-  const { address, isConnected, isConnecting } = useAccount();
+  const { isConnecting } = useAccount();
 
   return (
-    <div>
-      <h1>Ethereum Blogs</h1>
+    <Container className="py-8">
+      <h1 className="text-3xl font-bold mb-8">Ethereum Blogs</h1>
 
-      {isConnected ? <div>{address}</div> : <div>Not connected</div>}
-      {isConnecting && <div>Connecting...</div>}
-    </div>
+      {isConnecting ? <div>Connecting...</div> : <BlogPosts />}
+    </Container>
   );
 }

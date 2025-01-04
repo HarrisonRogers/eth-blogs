@@ -12,6 +12,7 @@ const config = createConfig(
     transports: {
       // RPC URL for each chain
       [sepolia.id]: http(process.env.INFURA_ENDPOINT as string),
+      [mainnet.id]: http(process.env.INFURA_ENDPOINT as string),
     },
 
     // Required API Keys
