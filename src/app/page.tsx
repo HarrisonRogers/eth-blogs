@@ -1,6 +1,5 @@
 'use client';
 
-import { ConnectKitButton } from 'connectkit';
 import { useAccount } from 'wagmi';
 
 export default function Home() {
@@ -9,9 +8,6 @@ export default function Home() {
   return (
     <div>
       <h1>Ethereum Blogs</h1>
-      <div className="flex justify-center">
-        <ConnectKitButton />
-      </div>
 
       {isConnected ? <div>{address}</div> : <div>Not connected</div>}
       {isConnecting && <div>Connecting...</div>}

@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Roboto, Sixtyfour, Oswald } from 'next/font/google';
 import './globals.css';
 import { Web3Provider } from '@/providers/Web3Provider';
+import Navbar from '@/components/navbar';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import Container from '@/components/ui/container';
 
 export const metadata: Metadata = {
   title: 'Ethereum Blogs',
@@ -36,7 +39,14 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${sixtyfour.variable} ${oswald.variable} antialiased flex flex-col items-center justify-center text-center h-screen`}
       >
-        <Web3Provider>{children}</Web3Provider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Web3Provider>
+            <Container className="items-center justify-center">
+              <Navbar />
+              {children}
+            </Container>
+          </Web3Provider>
+        </ThemeProvider>
       </body>
     </html>
   );
