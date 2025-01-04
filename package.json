@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.62.14",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "connectkit": "^1.8.2",
     "dotenv": "^16.4.7",
     "fs-extra": "^11.2.0",
     "lucide-react": "^0.469.0",
@@ -20,7 +22,8 @@
     "solc": "^0.8.28",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "viem": "^2.21.57",
+    "viem": "^2.22.2",
+    "wagmi": "^2.14.6",
     "web3": "^4.16.0",
     "zod": "^3.24.1"
   },
