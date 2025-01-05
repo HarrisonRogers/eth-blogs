@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${sixtyfour.variable} ${oswald.variable} antialiased flex flex-col items-center justify-center text-center h-screen`}
+        className={`${roboto.variable} ${sixtyfour.variable} ${oswald.variable} antialiased flex flex-col items-center justify-center mt-20`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Web3Provider>
