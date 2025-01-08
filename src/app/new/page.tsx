@@ -36,20 +36,34 @@ function NewBlogPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      date: new Date(),
+    },
   });
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    if (newDate) {
+      setValue('date', newDate);
+    }
+  };
 
   const handleCreateBlog = async (data: FormSchema) => {
     try {
       setLoading(true);
+      setError('');
       console.log(data);
       setSuccess(true);
-      setLoading(false);
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      console.error(errorMessage);
+      setError(errorMessage);
+      setSuccess(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -64,14 +78,17 @@ function NewBlogPage() {
         <div>
           <Label htmlFor="title">Title</Label>
           <Input placeholder="Title" {...register('title')} />
+          {errors.title && <p>{errors.title.message}</p>}
         </div>
         <div>
           <Label htmlFor="content">Content</Label>
           <Textarea placeholder="Content" {...register('content')} />
+          {errors.content && <p>{errors.content.message}</p>}
         </div>
         <div>
           <Label htmlFor="author">Author</Label>
           <Input placeholder="Author" {...register('author')} />
+          {errors.author && <p>{errors.author.message}</p>}
         </div>
         <div>
           <Label htmlFor="date">Date</Label>
@@ -89,18 +106,37 @@ function NewBlogPage() {
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={handleDateSelect}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
+          {errors.date && (
+            <p className="text-sm text-red-500 mt-1">{errors.date.message}</p>
+          )}
         </div>
-        <Button type="submit" className="active:scale-95 transition-all">
-          Create
+        <Button
+          type="submit"
+          className="active:scale-95 transition-all"
+          disabled={loading}
+        >
+          {loading ? 'Creating...' : 'Create'}
         </Button>
-        {success && <p>Blog created successfully</p>}
-        {error && <p>{error}</p>}
-        {loading && <p>Loading...</p>}
+        {success && (
+          <p className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+            Blog created successfully! ✨
+          </p>
+        )}
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            Error: {error}
+          </p>
+        )}
+        {loading && (
+          <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
+            Creating your blog post...
+          </p>
+        )}
       </form>
     </div>
   );
