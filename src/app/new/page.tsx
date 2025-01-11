@@ -16,6 +16,12 @@ import {
 } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
+import {
+  type BaseError,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from 'wagmi';
+import { BLOG_POST_FACTORY_ABI } from '@/constants/constants';
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -27,10 +33,12 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 function NewBlogPage() {
-  const [success, setSuccess] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { isLoading, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   const {
     register,
@@ -53,24 +61,24 @@ function NewBlogPage() {
 
   const handleCreateBlog = async (data: FormSchema) => {
     try {
-      setLoading(true);
-      setError('');
+      writeContract({
+        address: process.env
+          .NEXT_PUBLIC_FACTORY_CONTRACT_ADDRESS as `0x${string}`,
+        abi: BLOG_POST_FACTORY_ABI,
+        functionName: 'createBlogPost',
+        args: [data.title, data.content, data.author, data.date],
+      });
       console.log(data);
-      setSuccess(true);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred';
       console.error(errorMessage);
-      setError(errorMessage);
-      setSuccess(false);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">Create a new blog</h1>
+    <div className="w-1/2">
+      <h1 className="text-3xl text-center font-bold mb-8">Create a new blog</h1>
       <form
         onSubmit={handleSubmit(handleCreateBlog)}
         className="flex flex-col gap-4 w-full"
@@ -118,21 +126,22 @@ function NewBlogPage() {
         <Button
           type="submit"
           className="active:scale-95 transition-all"
-          disabled={loading}
+          disabled={isPending}
         >
-          {loading ? 'Creating...' : 'Create'}
+          {isPending ? 'Creating...' : 'Create'}
         </Button>
-        {success && (
+        {hash && <p>Transaction Hash: {hash}</p>}
+        {isSuccess && (
           <p className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
             Blog created successfully! ✨
           </p>
         )}
         {error && (
           <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-            Error: {error}
+            Error: {(error as BaseError).shortMessage || error.message}
           </p>
         )}
-        {loading && (
+        {isLoading && (
           <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
             Creating your blog post...
           </p>
