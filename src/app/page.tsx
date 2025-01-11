@@ -11,8 +11,6 @@ export default function Home() {
     <div className="text-center">
       <h1 className="text-3xl font-bold mb-8">Ethereum Blogs</h1>
 
-      <BlogPosts />
-
       {isConnecting ? <div>Connecting...</div> : <BlogPosts />}
       <Link href="/new" className="mt-10">
         New Blog

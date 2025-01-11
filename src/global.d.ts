@@ -9,6 +9,6 @@ declare global {
     title: string;
     content: string;
     author: Address;
-    date: Date;
+    date: string;
   }
 }

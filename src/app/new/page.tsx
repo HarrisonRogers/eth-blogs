@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,7 +35,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 function NewBlogPage() {
   const [date, setDate] = useState<Date | undefined>(undefined);
-
+  const router = useRouter();
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash,
@@ -66,9 +67,9 @@ function NewBlogPage() {
           .NEXT_PUBLIC_FACTORY_CONTRACT_ADDRESS as `0x${string}`,
         abi: BLOG_POST_FACTORY_ABI,
         functionName: 'createBlogPost',
-        args: [data.title, data.content, data.author, data.date],
+        args: [data.title, data.content, data.date],
       });
-      console.log(data);
+      router.push('/');
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred';
@@ -92,11 +93,6 @@ function NewBlogPage() {
           <Label htmlFor="content">Content</Label>
           <Textarea placeholder="Content" {...register('content')} />
           {errors.content && <p>{errors.content.message}</p>}
-        </div>
-        <div>
-          <Label htmlFor="author">Author</Label>
-          <Input placeholder="Author" {...register('author')} />
-          {errors.author && <p>{errors.author.message}</p>}
         </div>
         <div>
           <Label htmlFor="date">Date</Label>
