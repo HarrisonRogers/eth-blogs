@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,12 +17,6 @@ import {
 } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  type BaseError,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from 'wagmi';
-import { BLOG_POST_FACTORY_ABI } from '@/constants/constants';
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -35,11 +29,10 @@ type FormSchema = z.infer<typeof formSchema>;
 
 function NewBlogPage() {
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const router = useRouter();
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
-  const { isLoading, isSuccess } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
+  // const router = useRouter();
 
   const {
     register,
@@ -62,18 +55,15 @@ function NewBlogPage() {
 
   const handleCreateBlog = async (data: FormSchema) => {
     try {
-      writeContract({
-        address: process.env
-          .NEXT_PUBLIC_FACTORY_CONTRACT_ADDRESS as `0x${string}`,
-        abi: BLOG_POST_FACTORY_ABI,
-        functionName: 'createBlogPost',
-        args: [data.title, data.content, data.date],
-      });
-      router.push('/');
+      console.log(data);
+      setSuccess(true);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred';
       console.error(errorMessage);
+      setError(error as Error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,22 +112,22 @@ function NewBlogPage() {
         <Button
           type="submit"
           className="active:scale-95 transition-all"
-          disabled={isPending}
+          // disabled={isPending}
         >
-          {isPending ? 'Creating...' : 'Create'}
+          {/* {isPending ? 'Creating...' : 'Create'} */}
+          Create
         </Button>
-        {hash && <p>Transaction Hash: {hash}</p>}
-        {isSuccess && (
+        {success && (
           <p className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
             Blog created successfully! ✨
           </p>
         )}
         {error && (
           <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-            Error: {(error as BaseError).shortMessage || error.message}
+            Error: {(error as Error).message}
           </p>
         )}
-        {isLoading && (
+        {loading && (
           <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
             Creating your blog post...
           </p>
