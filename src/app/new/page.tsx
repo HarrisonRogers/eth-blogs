@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+// import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,36 +28,48 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 function NewBlogPage() {
-  const [success, setSuccess] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
+  // const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      date: new Date(),
+    },
   });
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    if (newDate) {
+      setValue('date', newDate);
+    }
+  };
 
   const handleCreateBlog = async (data: FormSchema) => {
     try {
-      setLoading(true);
       console.log(data);
       setSuccess(true);
-      setLoading(false);
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      console.error(errorMessage);
+      setError(error as Error);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">Create a new blog</h1>
+    <div className="w-1/2">
+      <h1 className="text-3xl text-center font-bold mb-8">Create a new blog</h1>
       <form
         onSubmit={handleSubmit(handleCreateBlog)}
         className="flex flex-col gap-4 w-full"
@@ -64,14 +77,12 @@ function NewBlogPage() {
         <div>
           <Label htmlFor="title">Title</Label>
           <Input placeholder="Title" {...register('title')} />
+          {errors.title && <p>{errors.title.message}</p>}
         </div>
         <div>
           <Label htmlFor="content">Content</Label>
           <Textarea placeholder="Content" {...register('content')} />
-        </div>
-        <div>
-          <Label htmlFor="author">Author</Label>
-          <Input placeholder="Author" {...register('author')} />
+          {errors.content && <p>{errors.content.message}</p>}
         </div>
         <div>
           <Label htmlFor="date">Date</Label>
@@ -89,18 +100,38 @@ function NewBlogPage() {
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={handleDateSelect}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
+          {errors.date && (
+            <p className="text-sm text-red-500 mt-1">{errors.date.message}</p>
+          )}
         </div>
-        <Button type="submit" className="active:scale-95 transition-all">
+        <Button
+          type="submit"
+          className="active:scale-95 transition-all"
+          // disabled={isPending}
+        >
+          {/* {isPending ? 'Creating...' : 'Create'} */}
           Create
         </Button>
-        {success && <p>Blog created successfully</p>}
-        {error && <p>{error}</p>}
-        {loading && <p>Loading...</p>}
+        {success && (
+          <p className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+            Blog created successfully! ✨
+          </p>
+        )}
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            Error: {(error as Error).message}
+          </p>
+        )}
+        {loading && (
+          <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
+            Creating your blog post...
+          </p>
+        )}
       </form>
     </div>
   );

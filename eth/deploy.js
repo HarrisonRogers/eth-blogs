@@ -25,14 +25,14 @@ if (!providerUrl || !privateKey) {
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
 
 // Create account from private key
-const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+const account = web3.eth.accounts.privateKeyToAccount(`0x${privateKey}`);
 web3.eth.accounts.wallet.add(account);
 
 (async () => {
   try {
     // Define paths for compiled contract
     const buildPath = path.resolve(__dirname, 'build');
-    const contractName = 'BlogPostFactory';
+    const contractName = 'BlogSubscriptions';
     const contractPath = path.resolve(buildPath, `${contractName}.json`);
 
     // Read and parse compiled contract

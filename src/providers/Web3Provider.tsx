@@ -20,12 +20,12 @@ const config = createConfig(
       .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
 
     // Required App Info
-    appName: 'Your App Name',
+    appName: 'Ethereum Blogs',
 
     // Optional App Info
-    appDescription: 'Your App Description',
-    appUrl: 'https://family.co', // your app's url
-    appIcon: 'https://family.co/logo.png', // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    appDescription: 'Ethereum Blogs',
+    appUrl: 'https://ethereumblogs.com', // your app's url
+    appIcon: 'https://ethereumblogs.com/logo.png', // your app's icon, no bigger than 1024x1024px (max. 1MB)
   })
 );
 
