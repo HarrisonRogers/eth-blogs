@@ -1,7 +1,7 @@
 'use client';
 
 import { useAccount } from 'wagmi';
-import { BlogPosts } from '@/components/BlogPosts';
+import BlogPosts from '@/components/BlogPosts';
 import Link from '@/components/ui/link';
 
 export default function Home() {

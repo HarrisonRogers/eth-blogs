@@ -10,5 +10,6 @@ declare global {
     content: string;
     author: Address;
     date: string;
+    user_eth_address: Address;
   }
 }

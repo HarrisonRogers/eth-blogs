@@ -1,70 +1,51 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-// import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useState, useTransition } from 'react';
+import { useAccount } from 'wagmi';
+import { createBlogPost } from '../actions/createBlogPost';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarIcon } from 'lucide-react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { blogPostSchema } from '@/schemas/blogPost';
+import * as z from 'zod';
 
-const formSchema = z.object({
-  title: z.string().min(1),
-  content: z.string().min(1),
-  author: z.string().min(1),
-  date: z.date(),
-});
+type FormSchema = z.infer<typeof blogPostSchema>;
 
-type FormSchema = z.infer<typeof formSchema>;
-
-function NewBlogPage() {
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
-  // const router = useRouter();
+export default function BlogPostForm() {
+  const { address } = useAccount();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      date: new Date(),
-    },
+    resolver: zodResolver(blogPostSchema),
   });
 
-  const handleDateSelect = (newDate: Date | undefined) => {
-    setDate(newDate);
-    if (newDate) {
-      setValue('date', newDate);
-    }
-  };
-
   const handleCreateBlog = async (data: FormSchema) => {
-    try {
-      console.log(data);
-      setSuccess(true);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      console.error(errorMessage);
-      setError(error as Error);
-    } finally {
-      setLoading(false);
+    if (!address) {
+      setError('Please connect your wallet.');
+      return;
     }
+
+    const formData = new FormData();
+    formData.set('title', data.title);
+    formData.set('content', data.content);
+    formData.set('userEthAddress', address);
+
+    startTransition(async () => {
+      try {
+        await createBlogPost(formData);
+        alert('Blog post created successfully!');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to create post.');
+      }
+    });
   };
 
   return (
@@ -84,57 +65,25 @@ function NewBlogPage() {
           <Textarea placeholder="Content" {...register('content')} />
           {errors.content && <p>{errors.content.message}</p>}
         </div>
-        <div>
-          <Label htmlFor="date">Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-left font-normal"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, 'PPP') : format(new Date(), 'PPP')}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleDateSelect}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          {errors.date && (
-            <p className="text-sm text-red-500 mt-1">{errors.date.message}</p>
-          )}
-        </div>
         <Button
           type="submit"
           className="active:scale-95 transition-all"
-          // disabled={isPending}
+          disabled={isPending}
         >
-          {/* {isPending ? 'Creating...' : 'Create'} */}
-          Create
+          {isPending ? 'Creating...' : 'Create'}
         </Button>
-        {success && (
-          <p className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
-            Blog created successfully! ✨
+
+        {isPending && (
+          <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
+            Creating your blog post...
           </p>
         )}
         {error && (
           <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-            Error: {(error as Error).message}
-          </p>
-        )}
-        {loading && (
-          <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
-            Creating your blog post...
+            Error: {error}
           </p>
         )}
       </form>
     </div>
   );
 }
-
-export default NewBlogPage;
