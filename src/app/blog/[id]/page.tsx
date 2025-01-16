@@ -3,6 +3,7 @@ import { getBlogPost } from './action';
 import NotFound from '@/components/utils/NotFound';
 import { Separator } from '@/components/ui/separator';
 import { monthDayYear } from '@/utils/dataFormat';
+import DeleteButton from './deleteButton';
 
 async function page({ params }: { params: { id: string } }) {
   const { success, data: blog } = await getBlogPost(params.id);
@@ -32,6 +33,8 @@ async function page({ params }: { params: { id: string } }) {
       )}
       <Separator className="my-5" />
       <p>{blog.content}</p>
+
+      <DeleteButton id={blog.id} authorAddress={blog.eth_address!} />
     </>
   );
 }

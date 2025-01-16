@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/client';
+import { revalidatePath } from 'next/cache';
 
 export async function getBlogPost(id: string) {
   const supabase = createClient();
@@ -19,4 +20,20 @@ export async function getBlogPost(id: string) {
     console.error('Error fetching blog post:', error);
     return { success: false, error: 'Failed to fetch blog post' };
   }
+}
+
+export async function deleteBlogPost(id: string) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('blog_posts')
+    .delete()
+    .eq('id', Number(id));
+
+  if (error) throw error;
+
+  revalidatePath('/');
+  revalidatePath(`/blog/${id}`);
+
+  return { success: true };
 }
