@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Roboto, Sixtyfour, Oswald } from 'next/font/google';
 import './globals.css';
-import { Web3Provider } from '@/providers/Web3Provider';
+import { Web3Provider } from '@/utils/providers/Web3Provider';
 import Navbar from '@/components/navbar';
-import { ThemeProvider } from '@/providers/ThemeProvider';
+import { ThemeProvider } from '@/utils/providers/ThemeProvider';
 import Container from '@/components/ui/container';
 
 export const metadata: Metadata = {

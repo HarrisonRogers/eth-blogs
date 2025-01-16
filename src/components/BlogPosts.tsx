@@ -1,24 +1,23 @@
-import { getBlogPosts } from '../app/actions/getBlogPosts';
+import React from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 export default async function BlogPosts() {
-  // Fetch blog posts using the server action
-  const posts = await getBlogPosts();
+  const supabase = createClient();
+  const { data: blogs, error } = await supabase.from('blog_posts').select('*');
+
+  if (error) {
+    console.error('Error fetching blogs:', error);
+    return <div>Error fetching blogs</div>;
+  }
 
   return (
     <div>
-      <h1>Blog Posts</h1>
-      {posts.length === 0 && <p>No blog posts available.</p>}
-      {posts.map((post) => (
-        <div key={post.id} className="border border-gray-200 p-4 rounded-md">
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
+      {blogs.map((blog) => (
+        <div key={blog.id}>
+          <h2>{blog.title}</h2>
+          <p>{blog.content}</p>
           <p>
-            <strong>Author:</strong> {post.authors[0].name} (
-            {post.authors[0].eth_address})
-          </p>
-          <p>
-            <strong>Posted on:</strong>{' '}
-            {new Date(post.created_at).toLocaleDateString()}
+            <strong>Author:</strong> {blog.eth_address}
           </p>
         </div>
       ))}

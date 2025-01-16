@@ -3,7 +3,7 @@ export interface BlogPost {
   title: string;
   content: string;
   date: string;
-  author: `0x${string}`;
+  eth_address: `0x${string}`;
 }
 
 export interface Subscription {
