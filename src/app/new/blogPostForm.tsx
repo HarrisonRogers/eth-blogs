@@ -29,8 +29,6 @@ function BlogPostForm() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('Form submission started', data);
-
     if (!address) {
       console.error('No connected wallet address found.');
       setError('Please connect your wallet.');
@@ -41,12 +39,6 @@ function BlogPostForm() {
     formData.set('title', data.title);
     formData.set('content', data.content);
     formData.set('userEthAddress', address);
-
-    console.log('Submitting data:', {
-      title: data.title,
-      content: data.content,
-      address,
-    });
 
     try {
       setIsPending(true);

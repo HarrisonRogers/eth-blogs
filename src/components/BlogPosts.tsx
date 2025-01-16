@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Database } from '../../database.types';
 import TruncatedContent from '@/components/utils/TruncatedContent';
-import { monthDayYear } from '@/utils/dataFormat';
+import { monthDayYear, truncateAddress } from '@/utils/dataFormat';
 
 type BlogPostProps = {
   blogs: Database['public']['Tables']['blog_posts']['Row'][];
@@ -25,7 +25,7 @@ export default async function BlogPosts({ blogs }: BlogPostProps) {
               href={`/blog/${blog.id}`}
             />
             <p>
-              <strong>Author:</strong> {blog.eth_address}
+              <strong>Author:</strong> {truncateAddress(blog.eth_address || '')}
             </p>
           </CardContent>
         </Card>
