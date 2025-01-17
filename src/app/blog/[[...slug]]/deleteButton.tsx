@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import React from 'react';
-import { deleteBlogPost } from './action';
+import { deleteBlogPost } from '@/actions/deleteBlogPost';
 import { Trash2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
@@ -22,7 +22,7 @@ function DeleteButton({ id, authorAddress }: DeleteButtonProps) {
   }
 
   const handleDelete = async () => {
-    await deleteBlogPost(String(id), authorAddress);
+    await deleteBlogPost(String(id), address);
     router.refresh();
     router.push('/');
   };

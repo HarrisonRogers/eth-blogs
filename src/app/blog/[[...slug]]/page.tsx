@@ -1,5 +1,6 @@
 import React from 'react';
-import { getAuthor, getBlogPost } from './action';
+import { getAuthor } from '@/actions/getAuthor';
+import { getBlogPost } from '@/actions/getBlogPost';
 import NotFound from '@/components/utils/NotFound';
 import { Separator } from '@/components/ui/separator';
 import { monthDayYear } from '@/utils/dataFormat';

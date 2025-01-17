@@ -11,7 +11,7 @@ import { blogPostSchema } from '@/schemas/blogPost';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createBlogPost } from './action';
+import { createBlogPost } from '@/actions/createBlogPost';
 import { cn } from '@/lib/utils';
 
 type FormSchema = z.infer<typeof blogPostSchema>;
