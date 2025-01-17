@@ -22,6 +22,19 @@ export async function getBlogPost(id: string) {
   }
 }
 
+export async function getAuthor(ethAddress: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('authors')
+    .select('*')
+    .eq('eth_address', ethAddress)
+    .single();
+
+  if (error) console.error(error);
+
+  return { success: true, data };
+}
+
 export async function deleteBlogPost(id: string) {
   const supabase = createClient();
 

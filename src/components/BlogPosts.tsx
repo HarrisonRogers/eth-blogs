@@ -18,7 +18,7 @@ export default async function BlogPosts({ blogs }: BlogPostProps) {
           key={blog.id}
           className="hover:scale-105 transition-all duration-300"
         >
-          <Link href={`/blog/${blog.id}`}>
+          <Link href={`/blog/${blog.eth_address}/${blog.id}`}>
             <CardTitle className="p-5">{blog.title}</CardTitle>
 
             <CardContent>
@@ -27,7 +27,7 @@ export default async function BlogPosts({ blogs }: BlogPostProps) {
               </small>
               <TruncatedContent
                 content={blog.content}
-                href={`/blog/${blog.id}`}
+                href={`/blog/${blog.eth_address}/${blog.id}`}
               />
               <p>
                 <strong>Author:</strong>{' '}
