@@ -11,14 +11,16 @@ type BlogPostProps = {
 
 export default async function BlogPosts({ blogs }: BlogPostProps) {
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {/* TODO: Fix hydration error */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {blogs.map((blog) => (
         <Card
           key={blog.id}
-          className="hover:scale-105 transition-all duration-300"
+          className="hover:scale-105 transition-all duration-300 h-full"
         >
-          <Link href={`/blog/${blog.eth_address}/${blog.id}`}>
+          <Link
+            href={`/blog/${blog.eth_address}/${blog.id}`}
+            className="h-full"
+          >
             <CardTitle className="p-5">{blog.title}</CardTitle>
 
             <CardContent>

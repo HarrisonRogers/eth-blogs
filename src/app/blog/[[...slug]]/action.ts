@@ -35,18 +35,19 @@ export async function getAuthor(ethAddress: string) {
   return { success: true, data };
 }
 
-export async function deleteBlogPost(id: string) {
+export async function deleteBlogPost(id: string, ethAddress: string) {
   const supabase = createClient();
 
   const { error } = await supabase
     .from('blog_posts')
     .delete()
-    .eq('id', Number(id));
+    .eq('id', Number(id))
+    .eq('eth_address', ethAddress);
 
   if (error) throw error;
 
   revalidatePath('/');
-  revalidatePath(`/blog/${id}`);
+  revalidatePath(`/blog/${ethAddress}/${id}`);
 
   return { success: true };
 }

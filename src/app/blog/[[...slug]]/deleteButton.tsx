@@ -22,7 +22,7 @@ function DeleteButton({ id, authorAddress }: DeleteButtonProps) {
   }
 
   const handleDelete = async () => {
-    await deleteBlogPost(String(id));
+    await deleteBlogPost(String(id), authorAddress);
     router.refresh();
     router.push('/');
   };

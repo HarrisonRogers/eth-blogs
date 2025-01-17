@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createBlogPost } from './action';
+import { cn } from '@/lib/utils';
 
 type FormSchema = z.infer<typeof blogPostSchema>;
 
@@ -79,7 +80,7 @@ function BlogPostForm() {
           id="content"
           placeholder="Content"
           {...register('content')}
-          className={errors.content ? 'border-red-500' : ''}
+          className={cn(errors.content ? 'border-red-500' : '', 'h-60')}
         />
         {errors.content && (
           <p className="text-red-500 text-sm mt-1">{errors.content.message}</p>
