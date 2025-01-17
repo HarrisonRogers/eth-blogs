@@ -14,11 +14,11 @@ export default async function BlogPosts({ blogs }: BlogPostProps) {
     <div className="grid grid-cols-3 gap-4">
       {/* TODO: Fix hydration error */}
       {blogs.map((blog) => (
-        <Link href={`/blog/${blog.id}`} key={blog.id}>
-          <Card
-            key={blog.id}
-            className="hover:scale-105 transition-all duration-300"
-          >
+        <Card
+          key={blog.id}
+          className="hover:scale-105 transition-all duration-300"
+        >
+          <Link href={`/blog/${blog.id}`}>
             <CardTitle className="p-5">{blog.title}</CardTitle>
 
             <CardContent>
@@ -34,8 +34,8 @@ export default async function BlogPosts({ blogs }: BlogPostProps) {
                 {truncateAddress(blog.eth_address || '')}
               </p>
             </CardContent>
-          </Card>
-        </Link>
+          </Link>
+        </Card>
       ))}
     </div>
   );

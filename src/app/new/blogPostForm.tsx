@@ -42,11 +42,15 @@ function BlogPostForm() {
 
     try {
       setIsPending(true);
-      await createBlogPost({
+      const result = await createBlogPost({
         ...data,
         eth_address: address,
       });
-      router.push('/');
+      if (result.success) {
+        router.push('/');
+      } else {
+        setError(result.error || 'Failed to create post.');
+      }
       setIsPending(false);
     } catch (err) {
       console.error('Error creating post:', err);

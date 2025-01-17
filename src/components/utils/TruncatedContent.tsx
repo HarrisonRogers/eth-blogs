@@ -23,7 +23,7 @@ export default function TruncatedContent({
         href={href}
         className="underline underline-offset-2 font-bold hover:no-underline"
       >
-        see more
+        read more
       </Link>
     </p>
   );

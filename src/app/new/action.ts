@@ -15,13 +15,22 @@ export async function createBlogPost(data: BlogFormData) {
   const supabase = await createClient(cookieStore);
 
   try {
-    const { error } = await supabase.from('blog_posts').insert({
-      title: data.title,
-      content: data.content,
-      eth_address: data.eth_address,
-    });
+    const { data: insertedData, error } = await supabase
+      .from('blog_posts')
+      .insert({
+        title: data.title,
+        content: data.content,
+        eth_address: data.eth_address,
+      })
+      .select()
+      .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Database error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Blog post created successfully:', insertedData);
 
     revalidatePath('/');
     return { success: true };

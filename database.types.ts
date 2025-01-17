@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      authors: {
+        Row: {
+          created_at: string | null
+          eth_address: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          eth_address: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          eth_address?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           content: string
@@ -34,7 +55,44 @@ export type Database = {
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_eth_address_fkey"
+            columns: ["eth_address"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["eth_address"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          author_eth_address: string
+          id: number
+          subscribed_at: string | null
+          subscriber_eth_address: string
+        }
+        Insert: {
+          author_eth_address: string
+          id?: number
+          subscribed_at?: string | null
+          subscriber_eth_address: string
+        }
+        Update: {
+          author_eth_address?: string
+          id?: number
+          subscribed_at?: string | null
+          subscriber_eth_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_author_eth_address_fkey"
+            columns: ["author_eth_address"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["eth_address"]
+          },
+        ]
       }
     }
     Views: {
