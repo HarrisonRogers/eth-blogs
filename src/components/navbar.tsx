@@ -23,7 +23,7 @@ function Navbar() {
           </Link>
           {!author?.data ? (
             <Link href="/create-account">
-              <Button variant="ghost">Create Account</Button>
+              <Button variant="secondary">Create Account</Button>
             </Link>
           ) : (
             <Link href="/new">

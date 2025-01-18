@@ -1,43 +1,17 @@
 import React from 'react';
-import { Card, CardContent, CardTitle } from './ui/card';
 import { Database } from '../../database.types';
-import TruncatedContent from '@/components/utils/TruncatedContent';
-import { monthDayYear, truncateAddress } from '@/utils/dataFormat';
-import Link from 'next/link';
+
+import PostCard from './postCard';
 
 type BlogPostProps = {
   blogs: Database['public']['Tables']['blog_posts']['Row'][];
 };
 
-export default async function BlogPosts({ blogs }: BlogPostProps) {
+export default function BlogPosts({ blogs }: BlogPostProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {blogs.map((blog) => (
-        <Card
-          key={blog.id}
-          className="hover:scale-105 transition-all duration-300 h-full"
-        >
-          <Link
-            href={`/blog/${blog.eth_address}/${blog.id}`}
-            className="h-full"
-          >
-            <CardTitle className="p-5">{blog.title}</CardTitle>
-
-            <CardContent>
-              <small className="text-gray-500">
-                {monthDayYear(blog.created_at || '')}
-              </small>
-              <TruncatedContent
-                content={blog.content}
-                href={`/blog/${blog.eth_address}/${blog.id}`}
-              />
-              <p>
-                <strong>Author:</strong>{' '}
-                {truncateAddress(blog.eth_address || '')}
-              </p>
-            </CardContent>
-          </Link>
-        </Card>
+        <PostCard post={blog} key={blog.id} />
       ))}
     </div>
   );
