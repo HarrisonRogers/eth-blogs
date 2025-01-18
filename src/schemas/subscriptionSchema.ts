@@ -7,5 +7,3 @@ export const subscriptionSchema = z.object({
     .max(1000, "Fee can't be more than 1000 ETH")
     .step(0.0001, 'Fee must be in increments of 0.0001 ETH'),
 });
-
-export type SubscriptionFormData = z.infer<typeof subscriptionSchema>;

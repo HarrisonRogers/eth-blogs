@@ -1,9 +1,13 @@
-import { createClient } from '@/utils/supabase/client';
+'use server';
+
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-const supabase = createClient();
-
 export async function deleteBlogPost(id: string, ethAddress: string) {
+  const cookieStore = cookies();
+  const supabase = await createClient(cookieStore);
+
   const { error } = await supabase
     .from('blog_posts')
     .delete()
@@ -14,6 +18,7 @@ export async function deleteBlogPost(id: string, ethAddress: string) {
 
   revalidatePath('/');
   revalidatePath(`/blog/${ethAddress}/${id}`);
+  revalidatePath(`/author/${ethAddress}`);
 
   return { success: true };
 }

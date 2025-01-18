@@ -1,12 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import CreateAccountForm from './createAccountForm';
 
 export default function CreateAccountPage() {
-  const router = useRouter();
   const { address, isConnected } = useAccount();
 
   if (!isConnected || !address) {

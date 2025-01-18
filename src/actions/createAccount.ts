@@ -51,10 +51,8 @@ export async function createAccount(data: AccountFormData) {
       return { success: false, error: error.message };
     }
 
-    console.log('Account created successfully:', insertedData);
-
     revalidatePath('/');
-    return { success: true };
+    return { success: true, data: insertedData };
   } catch (error) {
     console.error('Error creating account:', error);
     return { success: false, error: 'Failed to create account' };

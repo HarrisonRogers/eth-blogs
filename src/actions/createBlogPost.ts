@@ -30,10 +30,9 @@ export async function createBlogPost(data: BlogFormData) {
       return { success: false, error: error.message };
     }
 
-    console.log('Blog post created successfully:', insertedData);
-
     revalidatePath('/');
-    return { success: true };
+    revalidatePath(`/author/${data.eth_address}`);
+    return { success: true, data: insertedData };
   } catch (error) {
     console.error('Error creating blog post:', error);
     return { success: false, error: 'Failed to create blog post' };
