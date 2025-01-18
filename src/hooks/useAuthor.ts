@@ -4,8 +4,14 @@ import { Database } from '../../database.types';
 
 type Author = Database['public']['Tables']['authors']['Row'];
 
+type QueryResponse = {
+  success: boolean;
+  data: Author | null;
+  error?: string;
+};
+
 export function useAuthor(ethAddress: string | undefined) {
-  return useQuery<{ success: boolean; data: Author | null }>({
+  return useQuery<QueryResponse>({
     queryKey: ['author', ethAddress],
     queryFn: () => {
       if (!ethAddress) {

@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { HomeIcon } from 'lucide-react';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useAccount } from 'wagmi';
+import { Avatar, AvatarFallback } from './ui/avatar';
 
 function Navbar() {
   const { address } = useAccount();
@@ -26,8 +27,12 @@ function Navbar() {
               <Button variant="secondary">Create Account</Button>
             </Link>
           ) : (
-            <Link href="/new">
-              <Button variant="ghost">Create Blog</Button>
+            <Link href={`/author/${author?.data.eth_address}`}>
+              <Avatar className="hover:scale-105 transition-all duration-300 active:scale-95">
+                <AvatarFallback>
+                  {author?.data.name.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             </Link>
           )}
         </div>
