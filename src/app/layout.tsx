@@ -5,6 +5,7 @@ import { Web3Provider } from '@/utils/providers/Web3Provider';
 import Navbar from '@/components/navbar';
 import { ThemeProvider } from '@/utils/providers/ThemeProvider';
 import Container from '@/components/ui/container';
+import Footer from '@/components/footer';
 
 export const metadata: Metadata = {
   title: 'Ethereum Blogs',
@@ -44,6 +45,7 @@ export default function RootLayout({
             <Container className="items-center justify-center">
               <Navbar />
               {children}
+              <Footer />
             </Container>
           </Web3Provider>
         </ThemeProvider>
