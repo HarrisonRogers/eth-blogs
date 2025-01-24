@@ -1,5 +1,6 @@
-import BlogPosts from '@/components/BlogPosts';
+// import BlogPosts from '@/components/BlogPosts';
 import { getAllBlogPosts } from '@/actions/getAllBlogPosts';
+import PostCard from '@/components/postCard';
 
 export default async function Home() {
   const { success, data: blogs, error } = await getAllBlogPosts();
@@ -14,7 +15,11 @@ export default async function Home() {
         Ethereum Blogs
       </h1>
 
-      <BlogPosts blogs={blogs} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {blogs.map((blog) => (
+          <PostCard post={blog} key={blog.id} />
+        ))}
+      </div>
     </div>
   );
 }

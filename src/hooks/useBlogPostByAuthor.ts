@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { Database } from '../../database.types';
+import { Tables } from '../../database.types';
 import { getBlogPostByAuthor } from '@/actions/getPostByAuthor';
 
-type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
+type BlogPost = Tables<'blog_posts'>;
 
 type QueryResponse = {
   success: boolean;
@@ -10,14 +10,26 @@ type QueryResponse = {
   error?: string;
 };
 
-export function useBlogPostByAuthor(ethAddress: string | undefined) {
+export function useBlogPostByAuthor(
+  ethAddress: string | undefined,
+  isSubscribed: boolean = false
+) {
   return useQuery<QueryResponse, Error>({
-    queryKey: ['blog-post-by-author', ethAddress],
+    queryKey: ['blog-post-by-author', ethAddress, isSubscribed],
     queryFn: async () => {
       if (!ethAddress) {
         return { success: true, data: [] as BlogPost[] };
       }
       const response = await getBlogPostByAuthor(ethAddress);
+
+      // If user is not subscribed, only return the first two posts
+      if (!isSubscribed && response.data) {
+        return {
+          ...response,
+          data: response.data.slice(0, 2),
+        };
+      }
+
       return { ...response, data: response.data || null };
     },
     enabled: !!ethAddress,
