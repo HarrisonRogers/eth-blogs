@@ -22,17 +22,19 @@ function Page({ params }: PageProps) {
   const { address } = useAccount();
   const { data: author } = useAuthor(params.ethAddress);
 
+  const isAuthor = author?.data?.eth_address === address;
+
   const { data: isSubscribed } = useReadContract({
     address: process.env
       .NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ADDRESS as `0x${string}`,
     abi: BlogSubscriptionsAbi,
-    functionName: 'isSubscribed',
-    args: [author?.data?.eth_address],
+    functionName: 'subscribed',
+    args: [author?.data?.eth_address, address],
   });
 
   const { data: posts } = useBlogPostByAuthor(
     params.ethAddress,
-    !!isSubscribed
+    isAuthor || !!isSubscribed
   );
 
   const { data: subscriptionFee } = useReadContract({
@@ -46,6 +48,8 @@ function Page({ params }: PageProps) {
   if (!author?.data) {
     return <NotFound />;
   }
+
+  console.log(isSubscribed);
 
   return (
     <div>
@@ -83,14 +87,19 @@ function Page({ params }: PageProps) {
           <PostCard post={post} key={post.id} />
         ))}
 
-        {!isSubscribed && posts?.data && posts.data.length >= 2 && (
-          <div className="mt-8 p-4 border border-primary rounded-md text-center">
-            <p className="mb-4">Subscribe to see all posts from this author!</p>
-            <Link href={`/author/${author?.data?.eth_address}/subscribe`}>
-              <Button variant="outline">Subscribe</Button>
-            </Link>
-          </div>
-        )}
+        {!isSubscribed &&
+          !isAuthor &&
+          posts?.data &&
+          posts.data.length >= 2 && (
+            <div className="mt-8 p-4 border border-primary rounded-md text-center">
+              <p className="mb-4">
+                Subscribe to see all posts from this author!
+              </p>
+              <Link href={`/author/${author?.data?.eth_address}/subscribe`}>
+                <Button variant="outline">Subscribe</Button>
+              </Link>
+            </div>
+          )}
       </div>
     </div>
   );

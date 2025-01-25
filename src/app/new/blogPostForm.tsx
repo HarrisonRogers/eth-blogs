@@ -48,7 +48,7 @@ function BlogPostForm() {
         eth_address: address,
       });
       if (result.success) {
-        router.push('/');
+        router.push(`/author/${address}`);
       } else {
         setError(result.error || 'Failed to create post.');
       }

@@ -13,7 +13,7 @@ function PostCard({ post }: PostCardProps) {
   return (
     <Card
       key={post.id}
-      className="hover:scale-105 transition-all duration-300 h-full"
+      className="hover:scale-105 transition-all duration-300 h-full mb-3"
     >
       <Link href={`/blog/${post.eth_address}/${post.id}`} className="h-full">
         <CardTitle className="p-5">{post.title}</CardTitle>
