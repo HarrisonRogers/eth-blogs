@@ -11,6 +11,7 @@ import BlogSubscriptionsAbi from '@/utils/blogSubscriptionsAbi';
 import { formatEther } from 'viem';
 import { Button } from '@/components/ui/button';
 import NotFound from '@/components/utils/NotFound';
+import Loader from '@/components/ui/loader';
 
 type PageProps = {
   params: {
@@ -20,24 +21,27 @@ type PageProps = {
 
 function Page({ params }: PageProps) {
   const { address } = useAccount();
-  const { data: author } = useAuthor(params.ethAddress);
+  const { data: author, isLoading: authorLoading } = useAuthor(
+    params.ethAddress
+  );
 
   const isAuthor = author?.data?.eth_address === address;
 
-  const { data: isSubscribed } = useReadContract({
-    address: process.env
-      .NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ADDRESS as `0x${string}`,
-    abi: BlogSubscriptionsAbi,
-    functionName: 'subscribed',
-    args: [author?.data?.eth_address, address],
-  });
+  const { data: isSubscribed, isLoading: subscriptionLoading } =
+    useReadContract({
+      address: process.env
+        .NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ADDRESS as `0x${string}`,
+      abi: BlogSubscriptionsAbi,
+      functionName: 'subscribed',
+      args: [author?.data?.eth_address, address],
+    });
 
-  const { data: posts } = useBlogPostByAuthor(
+  const { data: posts, isLoading: postsLoading } = useBlogPostByAuthor(
     params.ethAddress,
     isAuthor || !!isSubscribed
   );
 
-  const { data: subscriptionFee } = useReadContract({
+  const { data: subscriptionFee, isLoading: feeLoading } = useReadContract({
     address: process.env
       .NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ADDRESS as `0x${string}`,
     abi: BlogSubscriptionsAbi,
@@ -45,11 +49,13 @@ function Page({ params }: PageProps) {
     args: [author?.data?.eth_address],
   });
 
+  if (authorLoading || subscriptionLoading || postsLoading || feeLoading) {
+    return <Loader />;
+  }
+
   if (!author?.data) {
     return <NotFound />;
   }
-
-  console.log(isSubscribed);
 
   return (
     <div>
